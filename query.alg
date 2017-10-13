@@ -2,33 +2,34 @@
 
 %Rolf Kinder Gilet,  
 
-%Q1
+%Q1 For every Artistic book (type is ‘ART’), list the book code, book title, its price, and the name of the author along with the author sequence.
 artBook := select type = 'ART' (book);
 autNum := wrote njoin artBook;
 auth := autNum njoin author;
 q1result := project bookCode, title, price, authorLast, authorFirst, sequence (auth);
 
-%Q2
+%Q2 Retrieve the names of authors who have written at least one Fiction Book (type is ‘FIC’).
 ficBook := select type = 'FIC' (book);
 ficAuthNum := wrote njoin ficBook;
 authres := ficAuthNum njoin author;
 q2result := project  authorFirst, authorLast (authres);
 
-%Q3
+%Q3 Retrieve the names of all authors who have written books published by ‘Jove Publications’.
 pbCode := select publisherName = 'Jove Publications' (publisher);
 pbBook := pbCode njoin book; 
 pbAuth := pbBook njoin wrote; 
 authRe := pbAuth njoin author;
 q3result := project authorFirst, authorLast (authRe);
 
-%Q4
+%Q4 Retrieve the names of authors who have not written any book in the possession of Henry Books.
 aNu := project  authorNum (author);
 wNu := project  authorNum (wrote);
 notPosHenryBook := aNu  difference wNu; 
 auName := notPosHenryBook njoin author;
 q4Result := project authorFirst, authorLast (auName);
 
-%Q5
+%Q5 For every book of ’Good’ quality that the Henry Books possesses at its collection of branches, list the book title
+% the branch name that carries it, and the name of the author (along with the sequence number) who wrote it.
 goodQ := select quality ='Good' (copy);
 branchBook :=  branch njoin book;
 tempR := project bookCode, title, branchName (branchBook);
@@ -38,7 +39,8 @@ tempR2 := project bookCode, authorFirst, authorLast, sequence (authName);
 ress := tempR njoin tempR2;
 q5Result := project  title, branchName,  authorFirst, authorLast, sequence (ress);
 
-%Q6 my idea was to project authorNum from wrote and project authorNum from 
+%Q6 Retrieve the names of authors who have written at least two books.
+% my idea was to project authorNum from wrote and project authorNum from 
 % author and do an intersection but the project delet theduplicates i need for the evaluation
 allAuthWrote := author njoin   wrote;
 au1b := select authorNum =1 (wrote);
